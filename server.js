@@ -14,30 +14,22 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 const activeSessions = {};
+return nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false,
+  requireTLS: true,
 
+  auth: {
+    user: email,
+    pass: appPassword
+  },
 
-// ✅ Gmail Transporter (PORT 587 FIX)
-function createTransporter(email, appPassword) {
-
-    return nodemailer.createTransport({
-        host: "smtp.gmail.com",
-        port: 587,          // changed
-        secure: false,      // changed
-        requireTLS: true,   // added
-
-        auth: {
-            user: email,
-            pass: appPassword
-        },
-
-        tls: {
-            rejectUnauthorized: false
-        }
-    });
-
-}
-
-
+  tls: {
+    rejectUnauthorized: false,
+    family: 4   // ⭐ FORCE IPV4 (fixes Render error)
+  }
+});
 // Verify SMTP credentials
 app.post('/api/verify', async (req, res) => {
 
