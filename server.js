@@ -16,17 +16,25 @@ app.use(express.static(path.join(__dirname, 'public')));
 const activeSessions = {};
 
 
-// ✅ CREATE TRANSPORTER USING GMAIL SERVICE
+// ✅ CREATE TRANSPORTER USING IPV4 SMTP
 function createTransporter(email, appPassword) {
 
   return nodemailer.createTransport({
 
-    service: "gmail",
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false,
 
     auth: {
       user: email,
       pass: appPassword
-    }
+    },
+
+    tls: {
+      rejectUnauthorized: false
+    },
+
+    family: 4
 
   });
 
